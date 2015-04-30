@@ -1,5 +1,5 @@
 {
-    "name"       : "MultisiteDirectoryResolver",
+    "name"       : "gwa/multisite-directory-resolver",
     "type"       : "library",
     "description": "",
     "keywords"   : ["composer", "wordpress", "multisite"],
