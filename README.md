@@ -2,6 +2,14 @@
 
 ## Master
 
+[![Quality Score](https://img.shields.io/scrutinizer/g/gwa/WpMultisiteDirectoryResolver.svg?style=flat-square)](https://scrutinizer-ci.com/g/gwa/WpMultisiteDirectoryResolver/code-structure/master)
+[![Build Status](https://api.travis-ci.org/gwa/WpMultisiteDirectoryResolver.svg?branch=master&style=flat-square)](https://travis-ci.org/gwa/WpMultisiteDirectoryResolver)
+
+## Develop
+
+[![Quality Score](https://img.shields.io/scrutinizer/g/gwa/WpMultisiteDirectoryResolver.svg?style=flat-square)](https://scrutinizer-ci.com/g/gwa/WpMultisiteDirectoryResolver/code-structure/master)
+[![Build Status](https://api.travis-ci.org/gwa/WpMultisiteDirectoryResolver.svg?branch=master&style=flat-square)](https://travis-ci.org/gwa/WpMultisiteDirectoryResolver)
+
 ## Contributing
 
 All code contributions - including those of people having commit access -
