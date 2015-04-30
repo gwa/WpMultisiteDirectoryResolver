@@ -74,7 +74,7 @@ class MultisiteDirectoryResolver
      * @param string $path
      * @param string $scheme
      *
-     * @return stromg
+     * @return string
      */
     public function fixNetworkAdminUrlFilter($path = '', $scheme = 'admin')
     {
@@ -183,6 +183,7 @@ class MultisiteDirectoryResolver
      * Set network url.
      *
      * @param string
+     * @param string|null $networkUrl
      */
     protected function setNetworkUrl($networkUrl)
     {
