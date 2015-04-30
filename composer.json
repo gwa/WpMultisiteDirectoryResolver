@@ -1,0 +1,45 @@
+{
+    "name"       : "MultisiteDirectoryResolver",
+    "type"       : "library",
+    "description": "",
+    "keywords"   : ["composer", "wordpress", "multisite"],
+    "license"    : "MIT",
+    "homepage"   : "https://github.com/gwa/WpMultisiteDirectoryResolver",
+    "support"    : {
+        "issues": "https://github.com/gwa/WpMultisiteDirectoryResolver/issues",
+        "source": "https://github.com/gwa/WpMultisiteDirectoryResolver"
+    },
+    "authors"    : [
+        {
+          "name"    : "Great White Ark",
+          "homepage": "http://www.greatwhiteark.com"
+        }
+    ],
+    "require": {
+        "php"                        : ">=5.4.0"
+    },
+    "require-dev": {
+        "fabpot/php-cs-fixer"        : "~1.7",
+        "phpunit/phpunit"            : "~4.6.6",
+        "satooshi/php-coveralls"     : "~0.6.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Gwa\\Wordpress\\"       : "src/Gwa"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Gwa\\Wordpress\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master"             : "0.0.3-dev"
+        }
+    },
+    "suggest": {
+    },
+    "minimum-stability"              : "dev",
+    "prefer-stable"                  : true
+}
