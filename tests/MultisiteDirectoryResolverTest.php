@@ -59,40 +59,53 @@ class MultisiteDirectoryResolverTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('array', $filters[4]->callback);
     }
 
-    public function testSetNetworkUrl()
+    public function testFixNetworkAdminUrl()
     {
-        $installsubfolder = 'web/wp';
+        $domain           = 'http://example.org';
+        $installpath      = '/path/to/my/project';
+        $installsubfolder = 'foo/wp';
 
-        $cwml = new CwmlStub($installsubfolder, 'test');
-        $this->assertEquals('test', $cwml->getNetworkUrl());
+        $defaultadminurl  = $domain.$installpath.'/network/wp-admin';
+        $expectedadminurl = $domain.$installpath.'/'.$installsubfolder.'/network/wp-admin';
 
-        $cwml2 = new CwmlStub($installsubfolder);
-        $this->assertEquals('wp/wp-admin/network/', $cwml2->getNetworkUrl());
+        $cwml = new MDR($installsubfolder);
+        $this->assertEquals($expectedadminurl, $cwml->fixNetworkAdminUrlFilter($defaultadminurl, ''));
     }
 
-    public function testFixNetworkAdminUrlFilter()
+    public function testFixSiteAdminUrl()
     {
-        $installsubfolder = 'web/wp';
+        $domain           = 'http://example.org';
+        $installpath      = '/path/to/my/project';
+        $installsubfolder = 'foo/wp';
 
-        $url = 'http://example.org/projects/testWordpress/web/wp-admin/';
-        $correctUrl = 'http://example.org/projects/testWordpress/web/wp/wp-admin/';
-
-        $cwml = new MDR($installsubfolder);
-        $this->assertEquals($correctUrl, $cwml->fixNetworkAdminUrlFilter($url, ''));
-
-        $cwml = new MDR($installsubfolder);
-        $this->assertNotEquals($url, $cwml->fixNetworkAdminUrlFilter($url, ''));
+        $defaultadminurl  = $domain.$installpath.'/wp-admin';
+        $expectedadminurl = $domain.$installpath.'/'.$installsubfolder.'/wp-admin';
 
         $cwml = new MDR($installsubfolder);
-        $this->assertEquals($correctUrl, $cwml->fixNetworkAdminUrlFilter($correctUrl, ''));
+        $this->assertEquals($expectedadminurl, $cwml->fixSiteUrlFilter($defaultadminurl, ''));
+    }
+
+    public function testFixSiteLoginUrl()
+    {
+        $domain           = 'http://example.org';
+        $installpath      = '/path/to/my/project';
+        $installsubfolder = 'foo/wp';
+
+        $defaultloginurl  = $domain.$installpath.'/wp-login';
+        $expectedloginurl = $domain.$installpath.'/'.$installsubfolder.'/wp-login';
+
+        $cwml = new MDR($installsubfolder);
+        $this->assertEquals($expectedloginurl, $cwml->fixSiteUrlFilter($defaultloginurl, ''));
     }
 
     public function testFixSiteUrlFilterWhenWpAdminPassed()
     {
-        $installsubfolder = 'web/wp';
+        $domain           = 'http://example.org';
+        $installpath      = '/path/to/my/project';
+        $installsubfolder = 'foo/wp';
 
-        $urlAdmin = 'http://example.org/projects/testWordpress/wp-admin/';
-        $correctUrlAdmin = 'http://example.org/projects/testWordpress/web/wp/wp-admin/';
+        $urlAdmin         = 'http://example.org/projects/testWordpress/wp-admin/';
+        $correctUrlAdmin  = 'http://example.org/projects/testWordpress/web/wp/wp-admin/';
 
         $cwml = new MDR($installsubfolder);
         $this->assertEquals($correctUrlAdmin, $cwml->fixSiteUrlFilter($urlAdmin, '', ''));
@@ -106,10 +119,12 @@ class MultisiteDirectoryResolverTest extends \PHPUnit_Framework_TestCase
 
     public function testFixSiteUrlFilterWhenWpLoginPassed()
     {
-        $installsubfolder = 'web/wp';
+        $domain           = 'http://example.org';
+        $installpath      = '/path/to/my/project';
+        $installsubfolder = 'foo/wp';
 
-        $urlLogin = 'http://example.org/projects/testWordpress/wp-login.php';
-        $correctUrlLogin = 'http://example.org/projects/testWordpress/web/wp/wp-login.php';
+        $urlLogin         = 'http://example.org/projects/testWordpress/wp-login.php';
+        $correctUrlLogin  = 'http://example.org/projects/testWordpress/web/wp/wp-login.php';
 
         $cwml = new MDR($installsubfolder);
         $this->assertEquals($correctUrlLogin, $cwml->fixSiteUrlFilter($urlLogin, '', ''));
@@ -121,21 +136,23 @@ class MultisiteDirectoryResolverTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($correctUrlLogin, $cwml->fixSiteUrlFilter($correctUrlLogin, '', ''));
     }
 
-    public function testFixesStyleScriptURLWhenExternUrlPassed($value='')
+    public function testFixesStyleScriptURLWhenExternUrlPassed($value = '')
     {
-        $installsubfolder = 'web/wp';
+        $installsubfolder = 'foo/wp';
 
-        $googleUrl = '//fonts.googleapis.com/css?family=Open+Sans%3A300italic%2C400italic%2C600italic%2C300%2C400%2C600&subset=latin%2Clatin-ext&ver=4.2.1';
+        $googleUrl        = '//fonts.googleapis.com/css?family=Open+Sans%3A300italic%2C400italic%2C600italic%2C300%2C400%2C600&subset=latin%2Clatin-ext&ver=4.2.1';
 
         $cwml = new MDR($installsubfolder);
         $this->assertEquals($googleUrl, $cwml->fixStyleScriptPathFilter($googleUrl, ''));
     }
 
-    public function testFixesStyleScriptURLWhenPluginUrlPassed($value='')
+    public function testFixesStyleScriptURLWhenPluginUrlPassed($value = '')
     {
-        $installsubfolder = 'web/wp';
+        $domain           = 'http://example.org';
+        $installpath      = '/path/to/my/project';
+        $installsubfolder = 'foo/wp';
 
-        $urlPlugin = 'http://example.org/projects/testWordpress/app/plugins/';
+        $urlPlugin        =  $domain.$installpath.'/app/plugins/';
 
         $cwml = new MDR($installsubfolder);
         $this->assertEquals($urlPlugin, $cwml->fixStyleScriptPathFilter($urlPlugin, ''));
@@ -148,7 +165,9 @@ class MultisiteDirectoryResolverTest extends \PHPUnit_Framework_TestCase
 
     public function testFixesStyleScriptURLWhenSiteUrlPassed()
     {
-        $installsubfolder = 'web/wp';
+        $domain           = 'http://example.org';
+        $installpath      = '/path/to/my/project';
+        $installsubfolder = 'foo/wp';
 
         $siteurl = 'http://example.org/projects/testWordpress/';
         $urlexpected = $siteurl.'/'.$installsubfolder;
@@ -159,7 +178,9 @@ class MultisiteDirectoryResolverTest extends \PHPUnit_Framework_TestCase
 
     public function testLeavesStyleScriptURLWhenCorrectUrlPassed()
     {
-        $installsubfolder = 'web/wp';
+        $domain           = 'http://example.org';
+        $installpath      = '/path/to/my/project';
+        $installsubfolder = 'foo/wp';
 
         $siteurl = 'http://example.org/projects/testWordpress/';
         $urlpassed = $urlexpected = $siteurl.'/'.$installsubfolder.'/';
@@ -170,7 +191,9 @@ class MultisiteDirectoryResolverTest extends \PHPUnit_Framework_TestCase
 
     public function testFixWpIncludeFolder()
     {
-        $installsubfolder = 'web/wp';
+        $domain           = 'http://example.org';
+        $installpath      = '/path/to/my/project';
+        $installsubfolder = 'foo/wp';
 
         $url = 'http://example.org/projects/testWordpress/wp-includes/';
         $correctUrl = 'http://example.org/projects/testWordpress/web/wp/wp-includes/';
@@ -187,7 +210,9 @@ class MultisiteDirectoryResolverTest extends \PHPUnit_Framework_TestCase
 
     public function testSetWpFolderName()
     {
-        $installsubfolder = 'web/wp';
+        $domain           = 'http://example.org';
+        $installpath      = '/path/to/my/project';
+        $installsubfolder = 'foo/wp';
 
         $cwml = new CwmlStub($installsubfolder);
         $this->assertEquals('wp', $cwml->getWordpressName());
@@ -197,11 +222,6 @@ class MultisiteDirectoryResolverTest extends \PHPUnit_Framework_TestCase
 
 class CwmlStub extends MDR
 {
-    public function getNetworkUrl()
-    {
-        return $this->networkUrl;
-    }
-
     public function getWordpressName()
     {
         return $this->wpFolderName;

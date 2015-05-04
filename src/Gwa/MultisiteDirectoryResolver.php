@@ -23,13 +23,6 @@ namespace Gwa\Wordpress;
 class MultisiteDirectoryResolver
 {
     /**
-     * Network Url.
-     *
-     * @type string
-     */
-    protected $networkUrl = '';
-
-    /**
      * Folder path to wordpress.
      *
      * @type string
@@ -54,9 +47,8 @@ class MultisiteDirectoryResolver
      * MultisiteDirectoryResolver.
      *
      * @param string $const
-     * @param string $networkUrl
      */
-    public function __construct($const = '', $networkUrl = null)
+    public function __construct($const = '')
     {
         $this->const   = $const;
 
@@ -65,7 +57,6 @@ class MultisiteDirectoryResolver
         $this->cmWpDir = substr($this->const, -1) === '/' ? $this->const : $this->const.'/';
 
         $this->setWpFolderName();
-        $this->setNetworkUrl($networkUrl);
     }
 
     /**
@@ -177,17 +168,6 @@ class MultisiteDirectoryResolver
         if ($this->const === '') {
             throw new \Exception('Please set the path to, where your Wordpress folder is.');
         }
-    }
-
-    /**
-     * Set network url.
-     *
-     * @param string
-     * @param string|null $networkUrl
-     */
-    protected function setNetworkUrl($networkUrl)
-    {
-        $this->networkUrl = $networkUrl ?: $this->wpFolderName.'/wp-admin/network/';
     }
 
     /**
