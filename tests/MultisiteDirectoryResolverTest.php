@@ -80,8 +80,8 @@ class MultisiteDirectoryResolverTest extends \PHPUnit_Framework_TestCase
         $installpath = '/path/to/my/project';
         $installsubfolder = 'foo/wp';
 
-        $defaultadminurl = $domain.$installpath.'/foo/network/wp-admin';
-        $expectedadminurl = $domain.$installpath.'/'.$installsubfolder.'/network/wp-admin';
+        $defaultadminurl = $domain.$installpath.'/foo/wp-admin/network';
+        $expectedadminurl = $domain.$installpath.'/'.$installsubfolder.'/wp-admin/network';
 
         $cwml = new MDR($installsubfolder);
         $this->assertEquals($expectedadminurl, $cwml->fixNetworkAdminUrlFilter($defaultadminurl, '', ''));
