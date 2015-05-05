@@ -73,8 +73,8 @@ class MultisiteDirectoryResolver
             return $path;
         }
 
-        $wordpressUrl = ['/(wp-admin)/'];
-        $multiSiteUrl = [$this->wpFolderName.'/wp-admin'];
+        $wordpressUrl = ['/(network)/'];
+        $multiSiteUrl = [$this->wpFolderName.'/network'];
 
         return preg_replace($wordpressUrl, $multiSiteUrl, $path, 1);
     }

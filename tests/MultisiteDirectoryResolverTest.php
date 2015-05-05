@@ -65,7 +65,7 @@ class MultisiteDirectoryResolverTest extends \PHPUnit_Framework_TestCase
         $installpath      = '/path/to/my/project';
         $installsubfolder = 'foo/wp';
 
-        $defaultadminurl  = $domain.$installpath.'/network/wp-admin';
+        $defaultadminurl  = $domain.$installpath.'/foo/network/wp-admin';
         $expectedadminurl = $domain.$installpath.'/'.$installsubfolder.'/network/wp-admin';
 
         $cwml = new MDR($installsubfolder);
@@ -82,7 +82,7 @@ class MultisiteDirectoryResolverTest extends \PHPUnit_Framework_TestCase
         $expectedadminurl = $domain.$installpath.'/'.$installsubfolder.'/wp-admin';
 
         $cwml = new MDR($installsubfolder);
-        $this->assertEquals($expectedadminurl, $cwml->fixSiteUrlFilter($defaultadminurl, ''));
+        $this->assertEquals($expectedadminurl, $cwml->fixSiteUrlFilter($defaultadminurl, '', ''));
     }
 
     public function testFixSiteLoginUrl()
@@ -91,11 +91,11 @@ class MultisiteDirectoryResolverTest extends \PHPUnit_Framework_TestCase
         $installpath      = '/path/to/my/project';
         $installsubfolder = 'foo/wp';
 
-        $defaultloginurl  = $domain.$installpath.'/wp-login';
-        $expectedloginurl = $domain.$installpath.'/'.$installsubfolder.'/wp-login';
+        $defaultloginurl  = $domain.$installpath.'/wp-login.php';
+        $expectedloginurl = $domain.$installpath.'/'.$installsubfolder.'/wp-login.php';
 
         $cwml = new MDR($installsubfolder);
-        $this->assertEquals($expectedloginurl, $cwml->fixSiteUrlFilter($defaultloginurl, ''));
+        $this->assertEquals($expectedloginurl, $cwml->fixSiteUrlFilter($defaultloginurl, '', ''));
     }
 
     public function testFixSiteUrlFilterWhenWpAdminPassed()
@@ -104,8 +104,8 @@ class MultisiteDirectoryResolverTest extends \PHPUnit_Framework_TestCase
         $installpath      = '/path/to/my/project';
         $installsubfolder = 'foo/wp';
 
-        $urlAdmin         = 'http://example.org/projects/testWordpress/wp-admin/';
-        $correctUrlAdmin  = 'http://example.org/projects/testWordpress/web/wp/wp-admin/';
+        $urlAdmin         = $domain.$installpath.'/wp-admin/';
+        $correctUrlAdmin  = $domain.$installpath.'/'.$installsubfolder.'/wp-admin/';
 
         $cwml = new MDR($installsubfolder);
         $this->assertEquals($correctUrlAdmin, $cwml->fixSiteUrlFilter($urlAdmin, '', ''));
@@ -123,14 +123,11 @@ class MultisiteDirectoryResolverTest extends \PHPUnit_Framework_TestCase
         $installpath      = '/path/to/my/project';
         $installsubfolder = 'foo/wp';
 
-        $urlLogin         = 'http://example.org/projects/testWordpress/wp-login.php';
-        $correctUrlLogin  = 'http://example.org/projects/testWordpress/web/wp/wp-login.php';
+        $urlLogin         = $domain.$installpath.'/wp-login.php';
+        $correctUrlLogin  = $domain.$installpath.'/'.$installsubfolder.'/wp-login.php';
 
         $cwml = new MDR($installsubfolder);
         $this->assertEquals($correctUrlLogin, $cwml->fixSiteUrlFilter($urlLogin, '', ''));
-
-        $cwml = new MDR($installsubfolder);
-        $this->assertNotEquals($urlLogin, $cwml->fixSiteUrlFilter($urlLogin, '', ''));
 
         $cwml = new MDR($installsubfolder);
         $this->assertEquals($correctUrlLogin, $cwml->fixSiteUrlFilter($correctUrlLogin, '', ''));
@@ -182,7 +179,7 @@ class MultisiteDirectoryResolverTest extends \PHPUnit_Framework_TestCase
         $installpath      = '/path/to/my/project';
         $installsubfolder = 'foo/wp';
 
-        $siteurl = 'http://example.org/projects/testWordpress/';
+        $siteurl = $domain.$installpath.'/';
         $urlpassed = $urlexpected = $siteurl.'/'.$installsubfolder.'/';
 
         $cwml = new MDR($installsubfolder);
@@ -195,8 +192,8 @@ class MultisiteDirectoryResolverTest extends \PHPUnit_Framework_TestCase
         $installpath      = '/path/to/my/project';
         $installsubfolder = 'foo/wp';
 
-        $url = 'http://example.org/projects/testWordpress/wp-includes/';
-        $correctUrl = 'http://example.org/projects/testWordpress/web/wp/wp-includes/';
+        $url = $domain.$installpath.'/wp-includes/';
+        $correctUrl = $domain.$installpath.'/'.$installsubfolder.'/wp-includes/';
 
         $cwml = new MDR($installsubfolder);
         $this->assertEquals($correctUrl, $cwml->fixWpIncludeFolder($url, ''));
