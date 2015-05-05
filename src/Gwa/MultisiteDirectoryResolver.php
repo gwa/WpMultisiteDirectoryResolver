@@ -73,8 +73,8 @@ class MultisiteDirectoryResolver
             return $path;
         }
 
-        $wordpressUrl = ['/(network)/', '/(wp-login\.php)/', '/(wp-activate\.php)/', '/(wp-signup\.php)/'];
-        $multiSiteUrl = [$this->wpFolderName.'/network', $this->wpFolderName.'/wp-login.php', $this->wpFolderName.'/wp-activate.php', $this->wpFolderName.'/wp-signup.php'];
+        $wordpressUrl = ['/(wp-admin)/', '/(wp-login\.php)/', '/(wp-activate\.php)/', '/(wp-signup\.php)/'];
+        $multiSiteUrl = [$this->wpFolderName.'/wp-admin', $this->wpFolderName.'/wp-login.php', $this->wpFolderName.'/wp-activate.php', $this->wpFolderName.'/wp-signup.php'];
 
         return preg_replace($wordpressUrl, $multiSiteUrl, $path, 1);
     }
