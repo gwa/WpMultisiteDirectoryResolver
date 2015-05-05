@@ -12,7 +12,7 @@ namespace Gwa\Wordpress;
  *
  * @license     MIT
  *
- * @version     0.0.3-dev
+ * @version     0.0.4
  */
 
 /**
@@ -50,7 +50,7 @@ class MultisiteDirectoryResolver
      */
     public function __construct($const = '')
     {
-        $this->const   = $const;
+        $this->const = $const;
 
         $this->checkForDefinition();
 
@@ -73,8 +73,8 @@ class MultisiteDirectoryResolver
             return $path;
         }
 
-        $wordpressUrl = ['/(network)/'];
-        $multiSiteUrl = [$this->wpFolderName.'/network'];
+        $wordpressUrl = ['/(network)/', '/(wp-login\.php)/', '/(wp-activate\.php)/', '/(wp-signup\.php)/'];
+        $multiSiteUrl = [$this->wpFolderName.'/network', $this->wpFolderName.'/wp-login.php', $this->wpFolderName.'/wp-activate.php', $this->wpFolderName.'/wp-signup.php'];
 
         return preg_replace($wordpressUrl, $multiSiteUrl, $path, 1);
     }
@@ -177,7 +177,7 @@ class MultisiteDirectoryResolver
      */
     protected function setWpFolderName()
     {
-        $wpFolderName       = explode('/', $this->cmWpDir);
+        $wpFolderName = explode('/', $this->cmWpDir);
 
         $this->wpFolderName = $wpFolderName[count($wpFolderName) - 2];
     }
