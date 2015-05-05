@@ -68,7 +68,7 @@ checks:
 tools:
     php_code_sniffer:
         config:
-            standard: PSR-2
+            standard: Symfony2
     php_loc:
         enabled: true
         excluded_dirs: [vendor, test]

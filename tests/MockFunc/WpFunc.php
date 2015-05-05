@@ -2,6 +2,19 @@
 
 namespace Gwa\Wordpress;
 
+/**
+ * Composer Multisite fixer.
+ *
+ * @author      Daniel Bannert <bannert@greatwhiteark.com>
+ * @copyright   2015 Great White Ark
+ *
+ * @link        http://www.greatwhiteark.com
+ *
+ * @license     MIT
+ *
+ * @version     0.0.4
+ */
+
 $addedFilters = [];
 
 function add_filter($filterName, $filterCall, $prio, $numVars)
@@ -22,11 +35,6 @@ function getAddedFilters()
     global $addedFilters;
 
     return $addedFilters;
-}
-
-function isFilterSet($filtername)
-{
-    // return true
 }
 
 /* -------- */
