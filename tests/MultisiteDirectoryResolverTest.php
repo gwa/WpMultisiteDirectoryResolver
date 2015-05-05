@@ -12,7 +12,7 @@ namespace Gwa\Wordpress\Test;
  *
  * @license     MIT
  *
- * @version     0.0.4
+ * @version     0.0.5
  */
 
 use Gwa\Wordpress\MultisiteDirectoryResolver as MDR;
