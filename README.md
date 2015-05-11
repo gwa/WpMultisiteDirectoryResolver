@@ -1,6 +1,39 @@
 ## MultisiteDirectoryResolver
 
+Adds filters that correct directory paths in a Wordpress multisite install with the WordPress installation in a custom subfolder. 
+
 ## Master
+
+[![Quality Score](https://img.shields.io/scrutinizer/g/gwa/WpMultisiteDirectoryResolver.svg?style=flat-square)](https://scrutinizer-ci.com/g/gwa/WpMultisiteDirectoryResolver/code-structure/master)
+[![Build Status](https://api.travis-ci.org/gwa/WpMultisiteDirectoryResolver.svg?branch=master&style=flat-square)](https://travis-ci.org/gwa/WpMultisiteDirectoryResolver)
+
+## Develop
+
+[![Quality Score](https://img.shields.io/scrutinizer/g/gwa/WpMultisiteDirectoryResolver.svg?style=flat-square)](https://scrutinizer-ci.com/g/gwa/WpMultisiteDirectoryResolver/code-structure/master)
+[![Build Status](https://api.travis-ci.org/gwa/WpMultisiteDirectoryResolver.svg?branch=master&style=flat-square)](https://travis-ci.org/gwa/WpMultisiteDirectoryResolver)
+
+## Usage
+
+### Requirements
+
+PHP 5.4.0 or above
+
+### Installation
+
+Install through composer.
+
+```
+composer require gwa/multisite-directory-resolver
+```
+
+### Init
+
+```php
+// project root: path/to/project
+// wp install:   path/to/project/custom/install/path
+$mdr = new Gwa\Wordpress\MultisiteDirectoryResolver('custom/install/path');
+$mdr->init();
+```
 
 ## Contributing
 
@@ -17,10 +50,6 @@ which we borrowed from Symfony.
 The easiest way to do make sure you're following the coding standard is to run `vendor/bin/php-cs-fixer fix` before committing.
 
 If you would like to help take a look at the [list of issues](https://github.com/gwa/WpMultisiteDirectoryResolver/issues).
-
-## Requirements
-
-PHP 5.4.0 or above
 
 ## Authors
 
