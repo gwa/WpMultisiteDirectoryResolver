@@ -31,7 +31,7 @@ class MultisiteDirectoryResolverTest extends \PHPUnit_Framework_TestCase
      */
     public function testCheckForDefinitionException()
     {
-        return new MDR();
+        new MDR('');
     }
 
     public function testInitFilter()
@@ -85,6 +85,18 @@ class MultisiteDirectoryResolverTest extends \PHPUnit_Framework_TestCase
 
         $cwml = new MDR($installsubfolder);
         $this->assertEquals($expectedadminurl, $cwml->fixNetworkAdminUrlFilter($defaultadminurl, '', ''));
+    }
+
+    public function testLeavesNetworkAdminUrlWhenCorrect()
+    {
+        $domain = 'http://example.org';
+        $installpath = '/path/to/my/project';
+        $installsubfolder = 'foo/wp';
+
+        $fixedadminurl = $domain.$installpath.'/'.$installsubfolder.'/wp-admin/network';
+
+        $cwml = new MDR($installsubfolder);
+        $this->assertEquals($fixedadminurl, $cwml->fixNetworkAdminUrlFilter($fixedadminurl, '', ''));
     }
 
     public function testFixNetworkActive()

@@ -23,11 +23,11 @@ namespace Gwa\Wordpress;
 class MultisiteDirectoryResolver
 {
     /**
-     * Folder path to wordpress.
+     * Folder path to wordpress, with trailing slash.
      *
      * @type string
      */
-    protected $cmWpDir = '';
+    protected $wpDirectoryPath = '';
 
     /**
      * Wordpress folder name.
@@ -37,24 +37,17 @@ class MultisiteDirectoryResolver
     protected $wpFolderName = '';
 
     /**
-     * Wp dir path.
-     *
-     * @type string
-     */
-    protected $const = '';
-
-    /**
      * MultisiteDirectoryResolver.
      *
-     * @param string $const
+     * @param string $wpdir
      */
-    public function __construct($const = '')
+    public function __construct($wpdir)
     {
-        $this->const = $const;
+        if (!is_string($wpdir) || $wpdir === '') {
+            throw new \Exception('Please set the relative path to your Wordpress install folder.');
+        }
 
-        $this->checkForDefinition();
-
-        $this->cmWpDir = substr($this->const, -1) === '/' ? $this->const : $this->const.'/';
+        $this->wpDirectoryPath = substr($wpdir, -1) === '/' ? $wpdir : $wpdir.'/';
 
         $this->setWpFolderName();
     }
@@ -69,12 +62,22 @@ class MultisiteDirectoryResolver
      */
     public function fixNetworkAdminUrlFilter($path = '', $scheme = 'admin')
     {
-        if (strpos($path, $this->cmWpDir)) {
+        if (strpos($path, $this->wpDirectoryPath)) {
             return $path;
         }
 
-        $wordpressUrl = ['/(wp-admin)/', '/(wp-login\.php)/', '/(wp-activate\.php)/', '/(wp-signup\.php)/'];
-        $multiSiteUrl = [$this->wpFolderName.'/wp-admin', $this->wpFolderName.'/wp-login.php', $this->wpFolderName.'/wp-activate.php', $this->wpFolderName.'/wp-signup.php'];
+        $wordpressUrl = [
+            '/(wp-admin)/',
+            '/(wp-login\.php)/',
+            '/(wp-activate\.php)/',
+            '/(wp-signup\.php)/'
+        ];
+        $multiSiteUrl = [
+            $this->wpFolderName.'/wp-admin',
+            $this->wpFolderName.'/wp-login.php',
+            $this->wpFolderName.'/wp-activate.php',
+            $this->wpFolderName.'/wp-signup.php'
+        ];
 
         return preg_replace($wordpressUrl, $multiSiteUrl, $path, 1);
     }
@@ -90,12 +93,12 @@ class MultisiteDirectoryResolver
      */
     public function fixSiteUrlFilter($url, $path, $scheme)
     {
-        if (strpos($url, $this->cmWpDir)) {
+        if (strpos($url, $this->wpDirectoryPath)) {
             return $url;
         }
 
         $wordpressUrl = ['/(wp-login\.php)/', '/(wp-admin)/'];
-        $multiSiteUrl = [$this->cmWpDir.'wp-login.php', $this->cmWpDir.'wp-admin'];
+        $multiSiteUrl = [$this->wpDirectoryPath.'wp-login.php', $this->wpDirectoryPath.'wp-admin'];
 
         return preg_replace($wordpressUrl, $multiSiteUrl, $url, 1);
     }
@@ -110,7 +113,7 @@ class MultisiteDirectoryResolver
      */
     public function fixStyleScriptPathFilter($src, $handle)
     {
-        $dir = rtrim($this->cmWpDir, '/');
+        $dir = rtrim($this->wpDirectoryPath, '/');
 
         if (
             strpos($src, site_url()) !== false &&
@@ -134,12 +137,12 @@ class MultisiteDirectoryResolver
      */
     public function fixWpIncludeFolder($url, $path)
     {
-        if (strpos($url, $this->cmWpDir)) {
+        if (strpos($url, $this->wpDirectoryPath)) {
             return $url;
         }
 
         $wordpressUrl = ['/(wp-includes)/'];
-        $multiSiteUrl = [$this->cmWpDir.'wp-includes'];
+        $multiSiteUrl = [$this->wpDirectoryPath.'wp-includes'];
 
         return preg_replace($wordpressUrl, $multiSiteUrl, $url, 1);
     }
@@ -159,26 +162,14 @@ class MultisiteDirectoryResolver
     }
 
     /**
-     * Check if define for "CM_WP_DIR" is set.
-     *
-     * @throws \Exception
-     */
-    protected function checkForDefinition()
-    {
-        if ($this->const === '') {
-            throw new \Exception('Please set the path to, where your Wordpress folder is.');
-        }
-    }
-
-    /**
      * Set wordpress folder name.
      *
      * @param string
      */
     protected function setWpFolderName()
     {
-        $wpFolderName = explode('/', $this->cmWpDir);
+        $folders = explode('/', $this->wpDirectoryPath);
 
-        $this->wpFolderName = $wpFolderName[count($wpFolderName) - 2];
+        $this->wpFolderName = $folders[count($folders) - 2];
     }
 }
