@@ -26,13 +26,22 @@ Install through composer.
 composer require gwa/multisite-directory-resolver
 ```
 
-### Init
+### How to use
 
 ```php
 // project root: path/to/project
 // wp install:   path/to/project/custom/install/path
 $mdr = new Gwa\Wordpress\MultisiteDirectoryResolver('custom/install/path');
 $mdr->init();
+```
+
+Set you cookie like to resolve the [wordpress multisite redirect Loop](https://tommcfarlin.com/resolving-the-wordpress-multisite-redirect-loop/)
+
+```php
+define('ADMIN_COOKIE_PATH', '/');
+define('COOKIE_DOMAIN', '');
+define('COOKIEPATH', '');
+define('SITECOOKIEPATH', '');
 ```
 
 ## Contributing
