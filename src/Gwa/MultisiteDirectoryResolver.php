@@ -11,8 +11,6 @@ namespace Gwa\Wordpress;
  * @link        http://www.greatwhiteark.com
  *
  * @license     MIT
- *
- * @version     0.0.5
  */
 
 /**
@@ -72,6 +70,7 @@ class MultisiteDirectoryResolver
             '/(wp-activate\.php)/',
             '/(wp-signup\.php)/'
         ];
+
         $multiSiteUrl = [
             $this->wpFolderName.'/wp-admin',
             $this->wpFolderName.'/wp-login.php',
@@ -122,6 +121,10 @@ class MultisiteDirectoryResolver
         ) {
             $styleUrl = explode(site_url(), $src);
             $src = site_url().'/'.$dir.$styleUrl[1];
+        }
+
+        if (strpos($src, 'plugins')) {
+            $src = str_replace('//', '/', $src);
         }
 
         return esc_url($src);
