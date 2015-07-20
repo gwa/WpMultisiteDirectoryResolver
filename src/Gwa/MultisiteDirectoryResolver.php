@@ -123,7 +123,7 @@ class MultisiteDirectoryResolver
             $src = site_url().'/'.$dir.$styleUrl[1];
         }
 
-        if (strpos($src, 'plugins') && strpos($src, '//app')) {
+        if (strpos($src, 'plugins') && strpos($src, '/app')) {
             $src = str_replace('//app', '/app', $src);
         }
 

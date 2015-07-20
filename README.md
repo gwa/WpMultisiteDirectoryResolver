@@ -35,13 +35,13 @@ $mdr = new Gwa\Wordpress\MultisiteDirectoryResolver('custom/install/path');
 $mdr->init();
 ```
 
-Set you cookie like to resolve the [wordpress multisite redirect Loop](https://tommcfarlin.com/resolving-the-wordpress-multisite-redirect-loop/)
+Set you cookie like this to resolve the wordpress multisite redirect Loop.
 
 ```php
+$domain = $_SERVER[ 'HTTP_HOST' ];
+
+define('COOKIE_DOMAIN', $domain);
 define('ADMIN_COOKIE_PATH', '/');
-define('COOKIE_DOMAIN', '');
-define('COOKIEPATH', '');
-define('SITECOOKIEPATH', '');
 ```
 
 ## Contributing
