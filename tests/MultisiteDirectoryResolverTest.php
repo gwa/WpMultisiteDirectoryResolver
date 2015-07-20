@@ -202,15 +202,17 @@ class MultisiteDirectoryResolverTest extends \PHPUnit_Framework_TestCase
         $installpath = '/path/to/my/project';
         $installsubfolder = 'foo/wp';
 
-        $urlPlugin = $domain.$installpath.'/app/plugins/';
+        $urlPlugin = $domain.$installpath.'//app/plugins/';
+        $expectedUrl = $domain.$installpath.'/app/plugins/';
 
         $cwml = new MDR($installsubfolder);
-        $this->assertEquals($urlPlugin, $cwml->fixStyleScriptPathFilter($urlPlugin, ''));
+        $this->assertEquals($expectedUrl, $cwml->fixStyleScriptPathFilter($urlPlugin, ''));
 
-        $urlPlugin = 'http://example.org/projects/testWordpress/web/wp/app/plugins/';
+        $urlPlugin = 'http://example.org/projects/testWordpress/web/wp//app/plugins/';
+        $expectedUrl = 'http://example.org/projects/testWordpress/web/wp/app/plugins/';
 
         $cwml = new MDR($installsubfolder);
-        $this->assertEquals($urlPlugin, $cwml->fixStyleScriptPathFilter($urlPlugin, ''));
+        $this->assertEquals($expectedUrl, $cwml->fixStyleScriptPathFilter($urlPlugin, ''));
     }
 
     public function testFixesStyleScriptURLWhenSiteUrlPassed()
