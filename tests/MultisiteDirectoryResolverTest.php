@@ -222,7 +222,7 @@ class MultisiteDirectoryResolverTest extends \PHPUnit_Framework_TestCase
         $installsubfolder = 'foo/wp';
 
         $siteurl = 'http://example.org/projects/testWordpress/';
-        $urlexpected = $siteurl.'/'.$installsubfolder;
+        $urlexpected = $siteurl.$installsubfolder;
 
         $cwml = new MDR($installsubfolder);
         $this->assertEquals($urlexpected, $cwml->fixStyleScriptPathFilter($siteurl, ''));

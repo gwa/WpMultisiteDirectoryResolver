@@ -15,12 +15,37 @@ namespace Gwa\Wordpress;
 use Gwa\Wordpress\Contracts\MultisiteDirectoryResolver as ResolverContract;
 
 /**
- * MultisiteDirectoryResolver.
+ * MultisiteSubDirectoryResolver.
  *
  * @author  Daniel Bannert
  */
-class MultisiteDirectoryResolver implements ResolverContract
+class MultisiteSubDirectoryResolver implements ResolverContract
 {
+    /**
+     * Folder path to wordpress, with trailing slash.
+     *
+     * @var string
+     */
+    protected $wpDirectoryPath = '';
+
+    /**
+     * Wordpress folder name.
+     *
+     * @var string
+     */
+    protected $wpFolderName = '';
+
+    /**
+     * MultisiteDirectoryResolver.
+     *
+     * @param string $wpdir
+     */
+    public function __construct($wpdir)
+    {
+        $this->wpDirectoryPath = substr($wpdir, -1) === '/' ? $wpdir : $wpdir.'/';
+        $this->setWpFolderName();
+    }
+
     /**
      * Set the right links in Adminbar.
      *
@@ -115,5 +140,17 @@ class MultisiteDirectoryResolver implements ResolverContract
         $multiSiteUrl = [trim($this->wpDirectoryPath, '/').'/wp-includes'];
 
         return preg_replace($wordpressUrl, $multiSiteUrl, $url, 1);
+    }
+
+    /**
+     * Set wordpress folder name.
+     *
+     * @param string
+     */
+    protected function setWpFolderName()
+    {
+        $folders = explode('/', $this->wpDirectoryPath);
+
+        $this->wpFolderName = $folders[count($folders) - 2];
     }
 }
