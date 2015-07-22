@@ -97,7 +97,7 @@ class MultisiteDirectoryResolver
         }
 
         $wordpressUrl = ['/(wp-login\.php)/', '/(wp-admin)/'];
-        $multiSiteUrl = [$this->wpDirectoryPath.'wp-login.php', $this->wpDirectoryPath.'wp-admin'];
+        $multiSiteUrl = [trim($this->wpDirectoryPath, '/').'/wp-login.php', trim($this->wpDirectoryPath, '/').'/wp-admin'];
 
         return preg_replace($wordpressUrl, $multiSiteUrl, $url, 1);
     }
@@ -114,14 +114,10 @@ class MultisiteDirectoryResolver
     {
         $dir = rtrim($this->wpDirectoryPath, '/');
 
-        if (
-            strpos($src, site_url()) !== false &&
-            strpos($src, 'plugins') === false &&
-            strpos($src, $dir) === false
-        ) {
-            $styleUrl = explode(site_url(), $src);
-            $src = site_url().'/'.$dir.$styleUrl[1];
-        }
+        $wordpressUrl = ['/(wp-admin)/', '/(wp-includes)/'];
+        $multiSiteUrl = [trim($this->wpDirectoryPath, '/').'/wp-admin', trim($this->wpDirectoryPath, '/').'/wp-includes'];
+
+        $src = preg_replace($wordpressUrl, $multiSiteUrl, $src, 1);
 
         if (strpos($src, 'plugins') && strpos($src, '/app')) {
             $src = str_replace('//app', '/app', $src);
@@ -145,7 +141,7 @@ class MultisiteDirectoryResolver
         }
 
         $wordpressUrl = ['/(wp-includes)/'];
-        $multiSiteUrl = [$this->wpDirectoryPath.'wp-includes'];
+        $multiSiteUrl = [trim($this->wpDirectoryPath, '/').'/wp-includes'];
 
         return preg_replace($wordpressUrl, $multiSiteUrl, $url, 1);
     }
