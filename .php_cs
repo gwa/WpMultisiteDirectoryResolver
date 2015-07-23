@@ -31,9 +31,7 @@ return Symfony\CS\Config\Config::create()
             'strict_param',
             '-no_empty_lines_after_phpdocs',
             'header_comment',
-            'newline_after_open_tag',
             'phpdoc_order',
-            'phpdoc_var_to_type',
             '-phpdoc_to_comment',
         ]
     )
