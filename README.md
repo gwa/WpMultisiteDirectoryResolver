@@ -31,16 +31,19 @@ composer require gwa/multisite-directory-resolver
 ```php
 // project root: path/to/project
 // wp install:   path/to/project/custom/install/path
-$mdr = new Gwa\Wordpress\MultisiteDirectoryResolver('custom/install/path');
+
+// choose which resolver you like to use
+// 1. MultisiteResolverManager::TYPE_FOLDER - Use only for sub folder url handling -> example.com/site1/../..
+// 2. MultisiteResolverManager::TYPE_SUBDOMAIN - Use only for sub domain handling -> test.example.com
+
+$mdr = new Gwa\Wordpress\MultisiteDirectoryResolver('custom/install/path', $resolver);
 $mdr->init();
 ```
 
 Set you cookie like this to resolve the wordpress multisite redirect Loop.
 
 ```php
-$domain = $_SERVER[ 'HTTP_HOST' ];
-
-define('COOKIE_DOMAIN', $domain);
+define('COOKIE_DOMAIN', $_SERVER['HTTP_HOST']);
 define('ADMIN_COOKIE_PATH', '/');
 ```
 
