@@ -19,37 +19,32 @@ use Gwa\Wordpress\Contracts\MultisiteDirectoryResolver as ResolverContract;
  *
  * @author  Daniel Bannert
  */
-class MultisiteDirectoryResolver implements ResolverContract
+class MultisiteDirectoryResolver extends AbstractResolver implements ResolverContract
 {
     /**
-     * Set the right links in Adminbar.
+     * Folder path to wordpress, with trailing slash.
      *
-     * @param string $path
-     * @param string $scheme
-     *
-     * @return string
+     * @var string
      */
-    public function fixNetworkAdminUrlFilter($path = '', $scheme = 'admin')
+    protected $wpDirectoryPath = '';
+
+    /**
+     * Wordpress folder name.
+     *
+     * @var string
+     */
+    protected $wpFolderName = '';
+
+    /**
+     * MultisiteDirectoryResolver.
+     *
+     * @param string $wpdir
+     */
+    public function __construct($wpdir)
     {
-        if (strpos($path, $this->wpDirectoryPath)) {
-            return $path;
-        }
+        $this->wpDirectoryPath = substr($wpdir, -1) === '/' ? $wpdir : $wpdir.'/';;
 
-        $wordpressUrl = [
-            '/(wp-admin)/',
-            '/(wp-login\.php)/',
-            '/(wp-activate\.php)/',
-            '/(wp-signup\.php)/',
-        ];
-
-        $multiSiteUrl = [
-            $this->wpFolderName.'/wp-admin',
-            $this->wpFolderName.'/wp-login.php',
-            $this->wpFolderName.'/wp-activate.php',
-            $this->wpFolderName.'/wp-signup.php',
-        ];
-
-        return preg_replace($wordpressUrl, $multiSiteUrl, $path, 1);
+        $this->setWpFolderName();
     }
 
     /**
@@ -85,16 +80,20 @@ class MultisiteDirectoryResolver implements ResolverContract
     {
         $dir = rtrim($this->wpDirectoryPath, '/');
 
-        $wordpressUrl = ['/(wp-admin)/', '/(wp-includes)/'];
-        $multiSiteUrl = [trim($this->wpDirectoryPath, '/').'/wp-admin', trim($this->wpDirectoryPath, '/').'/wp-includes'];
+        if (
+            strpos($src, site_url()) !== false &&
+            strpos($src, 'plugins') === false &&
+            strpos($src, $dir) === false
+        ) {
+            $styleUrl = explode(site_url(), $src);
+            $src = site_url().$dir.$styleUrl[1];
+        }
 
-        $src = preg_replace($wordpressUrl, $multiSiteUrl, $src, 1);
-
-        if (strpos($src, 'plugins') && strpos($src, '/app')) {
+        if (strpos($src, '/app')) {
             $src = str_replace('//app', '/app', $src);
         }
 
-        return esc_url($src)
+        return esc_url($src);
     }
 
     /**
@@ -115,5 +114,13 @@ class MultisiteDirectoryResolver implements ResolverContract
         $multiSiteUrl = [trim($this->wpDirectoryPath, '/').'/wp-includes'];
 
         return preg_replace($wordpressUrl, $multiSiteUrl, $url, 1);
+    }
+
+    public function init()
+    {
+        parent::init();
+
+        add_filter('site_url', [$this, 'fixSiteUrlFilter'], 10, 3);
+        add_filter('includes_url', [$this, 'fixWpIncludeFolder'], 10, 2);
     }
 }

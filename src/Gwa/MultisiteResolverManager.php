@@ -12,16 +12,14 @@ namespace Gwa\Wordpress;
  * @license     MIT
  */
 
-use Gwa\Wordpress\Contracts\MultisiteDirectoryResolver as ResolverContract;
-
 /**
- * MultisiteDirectoryResolver.
+ * MultisiteResolverManager.
  *
  * @author  Daniel Bannert
  */
-class MultisiteDirectoryResolverManager implements ResolverContract
+class MultisiteResolverManager
 {
-    const TYPE_SUBDOMAIN = '\Gwa\Wordpress\MultisiteSubDirectoryResolver';
+    const TYPE_SUBDOMAIN = '\Gwa\Wordpress\MultisiteSubDomainResolver';
     const TYPE_FOLDER    = '\Gwa\Wordpress\MultisiteDirectoryResolver';
 
     /**
@@ -32,13 +30,13 @@ class MultisiteDirectoryResolverManager implements ResolverContract
     protected $handler;
 
     /**
-     * MultisiteDirectoryResolver.
+     * MultisiteResolverManager.
      *
      * @param string $wpdir
      * @param string $multisiteDomainType
      */
     public function __construct($wpdir, $multisiteDomainType) {
-        if (!is_string($wpdir) || $wpdir === '') {
+        if (!is_string($wpdir) || $wpdir === '' || $wpdir === '/') {
             throw new \Exception('Please set the relative path to your Wordpress install folder.');
         }
 
@@ -46,16 +44,20 @@ class MultisiteDirectoryResolverManager implements ResolverContract
     }
 
     /**
+     * Get current Handler
+     *
+     * @return \Gwa\Wordpress\Contracts\MultisiteDirectoryResolver
+     */
+    public function getHandler()
+    {
+        return $this->handler;
+    }
+
+    /**
      * Init all filter.
      */
     public function init()
     {
-        add_filter('network_admin_url', [$this->handler, 'fixNetworkAdminUrlFilter'], 10, 2);
-        add_filter('site_url', [$this->handler, 'fixSiteUrlFilter'], 10, 3);
-
-        add_filter('script_loader_src', [$this->handler, 'fixStyleScriptPathFilter'], 10, 2);
-        add_filter('style_loader_src', [$this->handler, 'fixStyleScriptPathFilter'], 10, 2);
-
-        add_filter('includes_url', [$this->handler, 'fixWpIncludeFolder'], 10, 2);
+        $this->handler->init();
     }
 }

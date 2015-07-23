@@ -7,14 +7,12 @@ php:
   - 7.0
   - hhvm
   - nightly
-  - hhvm-nightly
 
 matrix:
   allow_failures:
     - php: 7.0
     - php: nightly
     - php: hhvm
-    - php: hhvm-nightly
   fast_finish: true
 
 sudo: false
