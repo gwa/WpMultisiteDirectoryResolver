@@ -84,6 +84,9 @@ abstract class AbstractResolver
 
         add_filter('script_loader_src', [$this, 'fixStyleScriptPathFilter'], 10, 2);
         add_filter('style_loader_src', [$this, 'fixStyleScriptPathFilter'], 10, 2);
+
+        add_filter('upload_dir',        [$this, 'fixWpDoubleSlashFilter'], 10, 1);
+        add_filter('upload_dir',        [$this, 'fixWpProtocolFilter'], 10, 1);
     }
 
     /**
@@ -96,5 +99,52 @@ abstract class AbstractResolver
         $dirs = explode('/', $this->wpDirectoryPath);
 
         $this->wpFolderName = $dirs[count($dirs) - 2];
+    }
+
+    /**
+     * Fix double backslashes in app folder.
+     *
+     * @param string
+     */
+    public function fixWpDoubleSlashFilter($urls)
+    {
+        foreach ($urls as &$url)
+        {
+            if ($url){
+                $url = str_replace('//app', '/app', $url);
+            }
+        }
+
+        return $urls;
+    }
+
+    /**
+     * Fixes the protocol in urls. Replaces leading double slashes // with the full protocol; https or http depending on context.
+     *
+     * @param string
+     * @return array
+     */
+    public function fixWpProtocolFilter($urls)
+    {
+        $protocol = self::getSiteProtocol();
+
+        foreach($urls as $k => &$v)
+        {
+            if ((strpos($k, 'url') !== false) && (substr( $v, 0, 2 ) === "//")) {
+                $v = $protocol.ltrim($v, '//');
+            }
+        }
+
+        return $urls;
+    }
+
+    /**
+     * Get the correct protocol
+     *
+     * @return string
+     */
+    protected static function getSiteProtocol()
+    {
+        return is_ssl() ? "https://" : "http://";
     }
 }
