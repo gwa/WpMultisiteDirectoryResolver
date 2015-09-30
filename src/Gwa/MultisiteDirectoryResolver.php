@@ -86,7 +86,7 @@ class MultisiteDirectoryResolver extends AbstractResolver implements ResolverCon
             strpos($src, $dir) === false
         ) {
             $styleUrl = explode(site_url(), $src);
-            $src = site_url().$dir.$styleUrl[1];
+            $src = site_url().'/'.$dir.$styleUrl[1];
         }
 
         if (strpos($src, '/app')) {
