@@ -140,13 +140,11 @@ abstract class AbstractResolver
 
     /**
      * Get the correct protocol
-     * TODO: validate with an SSL setup.
      *
-     * @param string
      * @return string
      */
     protected static function getSiteProtocol()
     {
-        return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+        return is_ssl() ? "https://" : "http://";
     }
 }
