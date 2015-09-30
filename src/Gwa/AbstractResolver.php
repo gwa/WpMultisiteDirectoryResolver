@@ -12,6 +12,8 @@ namespace Gwa\Wordpress;
  * @license     MIT
  */
 
+use Gwa\Wordpress\MockeryWpBridge\Traits\WpBridgeTrait;
+
 /**
  * AbstractResolver.
  *
@@ -19,6 +21,8 @@ namespace Gwa\Wordpress;
  */
 abstract class AbstractResolver
 {
+    use WpBridgeTrait;
+
     /**
      * Folder path to wordpress, with trailing slash.
      *
@@ -80,10 +84,10 @@ abstract class AbstractResolver
      */
     public function init()
     {
-        add_filter('network_admin_url', [$this, 'fixNetworkAdminUrlFilter'], 10, 2);
+        $this->getWpBridge()->addFilter('network_admin_url', [$this, 'fixNetworkAdminUrlFilter'], 10, 2);
 
-        add_filter('script_loader_src', [$this, 'fixStyleScriptPathFilter'], 10, 2);
-        add_filter('style_loader_src', [$this, 'fixStyleScriptPathFilter'], 10, 2);
+        $this->getWpBridge()->addFilter('script_loader_src', [$this, 'fixStyleScriptPathFilter'], 10, 2);
+        $this->getWpBridge()->addFilter('style_loader_src', [$this, 'fixStyleScriptPathFilter'], 10, 2);
     }
 
     /**

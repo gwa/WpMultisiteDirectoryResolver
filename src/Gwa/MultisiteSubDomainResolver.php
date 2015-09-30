@@ -35,6 +35,6 @@ class MultisiteSubDomainResolver extends AbstractResolver implements ResolverCon
             $src = str_replace('//app', '/app', $src);
         }
 
-        return esc_url($src);
+        return $this->getWpBridge()->escUrl($src);
     }
 }

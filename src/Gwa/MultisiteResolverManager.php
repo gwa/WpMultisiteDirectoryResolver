@@ -12,6 +12,8 @@ namespace Gwa\Wordpress;
  * @license     MIT
  */
 
+use Gwa\Wordpress\MockeryWpBridge\MockeryWpBridge;
+
 /**
  * MultisiteResolverManager.
  *
@@ -40,7 +42,12 @@ class MultisiteResolverManager
             throw new \Exception('Please set the relative path to your Wordpress install folder.');
         }
 
-        $this->handler = new $multisiteDomainType($wpdir);
+        $bridge  = new MockeryWpBridge();
+
+        $handler = new $multisiteDomainType($wpdir);
+        $handler->setWpBridge($bridge);
+
+        $this->handler = $handler;
     }
 
     /**
