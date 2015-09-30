@@ -110,14 +110,16 @@ abstract class AbstractResolver
     {
         foreach ($urls as &$url)
         {
-            $url = str_replace('//app', '/app', $url);
+            if ($url){
+                $url = str_replace('//app', '/app', $url);
+            }
         }
 
         return $urls;
     }
 
     /**
-     * Fix protocol in urls
+     * Fixes the protocol in urls. Replaces leading double slashes // with the full protocol; https or http depending on context.
      *
      * @param string
      * @return array
@@ -126,14 +128,19 @@ abstract class AbstractResolver
     {
         $protocol = self::getSiteProtocol();
 
-        $urls['url']     = $protocol.ltrim($urls['url'], '//');
-        $urls['baseurl'] = $protocol.ltrim($urls['baseurl'], '//');
+        foreach($urls as $k => &$v)
+        {
+            if ((strpos($k, 'url') !== false) && (substr( $v, 0, 2 ) === "//")) {
+                $v = $protocol.ltrim($v, '//');
+            }
+        }
 
         return $urls;
     }
 
     /**
      * Get the correct protocol
+     * TODO: validate with an SSL setup.
      *
      * @param string
      * @return string
