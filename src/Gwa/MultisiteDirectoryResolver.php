@@ -1,4 +1,5 @@
 <?php
+
 namespace Gwa\Wordpress;
 
 /**
@@ -42,7 +43,7 @@ class MultisiteDirectoryResolver extends AbstractResolver implements ResolverCon
      */
     public function __construct($wpdir)
     {
-        $this->wpDirectoryPath = substr($wpdir, -1) === '/' ? $wpdir : $wpdir.'/';;
+        $this->wpDirectoryPath = substr($wpdir, -1) === '/' ? $wpdir : $wpdir.'/';
 
         $this->setWpFolderName();
     }
@@ -86,7 +87,7 @@ class MultisiteDirectoryResolver extends AbstractResolver implements ResolverCon
             strpos($src, $dir) === false
         ) {
             $styleUrl = explode($this->getWpBridge()->siteUrl(), $src);
-            $src = $this->getWpBridge()->siteUrl().$dir.$styleUrl[1];
+            $src = $this->getWpBridge()->siteUrl().'/'.$dir.$styleUrl[1];
         }
 
         if (strpos($src, '/app')) {

@@ -13,15 +13,15 @@ namespace Gwa\Wordpress\Test;
  * @license     MIT
  */
 
-use Gwa\Wordpress\MultisiteResolverManager as MRM;
 use Gwa\Wordpress\MockeryWpBridge\MockeryWpBridge;
+use Gwa\Wordpress\MultisiteResolverManager as MRM;
 
 /**
  * MultisiteResolverManager.
  *
  * @author  Daniel Bannert
  */
-class MultisiteResolverManager extends \PHPUnit_Framework_TestCase
+class MultisiteManagerTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @expectedException \Exception
