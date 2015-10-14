@@ -42,7 +42,7 @@ class MultisiteResolverManager
             throw new \Exception('Please set the relative path to your Wordpress install folder.');
         }
 
-        $bridge  = new MockeryWpBridge();
+        $bridge  = new WpBridge();
 
         $handler = new $multisiteDomainType($wpdir);
         $handler->setWpBridge($bridge);
