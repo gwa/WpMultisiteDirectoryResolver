@@ -1,4 +1,5 @@
 <?php
+
 namespace Gwa\Wordpress;
 
 /**
@@ -42,7 +43,7 @@ class MultisiteDirectoryResolver extends AbstractResolver implements ResolverCon
      */
     public function __construct($wpdir)
     {
-        $this->wpDirectoryPath = substr($wpdir, -1) === '/' ? $wpdir : $wpdir.'/';;
+        $this->wpDirectoryPath = substr($wpdir, -1) === '/' ? $wpdir : $wpdir.'/';
 
         $this->setWpFolderName();
     }
@@ -81,19 +82,19 @@ class MultisiteDirectoryResolver extends AbstractResolver implements ResolverCon
         $dir = rtrim($this->wpDirectoryPath, '/');
 
         if (
-            strpos($src, site_url()) !== false &&
+            strpos($src, $this->getWpBridge()->siteUrl()) !== false &&
             strpos($src, 'plugins') === false &&
             strpos($src, $dir) === false
         ) {
-            $styleUrl = explode(site_url(), $src);
-            $src = site_url().$dir.$styleUrl[1];
+            $styleUrl = explode($this->getWpBridge()->siteUrl(), $src);
+            $src = $this->getWpBridge()->siteUrl().'/'.$dir.$styleUrl[1];
         }
 
         if (strpos($src, '/app')) {
             $src = str_replace('//app', '/app', $src);
         }
 
-        return esc_url($src);
+        return $this->getWpBridge()->escUrl($src);
     }
 
     /**
@@ -120,7 +121,7 @@ class MultisiteDirectoryResolver extends AbstractResolver implements ResolverCon
     {
         parent::init();
 
-        add_filter('site_url', [$this, 'fixSiteUrlFilter'], 10, 3);
-        add_filter('includes_url', [$this, 'fixWpIncludeFolder'], 10, 2);
+        $this->getWpBridge()->addFilter('site_url', [$this, 'fixSiteUrlFilter'], 10, 3);
+        $this->getWpBridge()->addFilter('includes_url', [$this, 'fixWpIncludeFolder'], 10, 2);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Gwa\Wordpress;
 
 /**
@@ -21,7 +22,7 @@ use Gwa\Wordpress\Contracts\MultisiteDirectoryResolver as ResolverContract;
  */
 class MultisiteSubDomainResolver extends AbstractResolver implements ResolverContract
 {
-     /**
+    /**
      * Set the right path for script and style loader.
      *
      * @param string $src
@@ -35,6 +36,6 @@ class MultisiteSubDomainResolver extends AbstractResolver implements ResolverCon
             $src = str_replace('//app', '/app', $src);
         }
 
-        return esc_url($src);
+        return $this->getWpBridge()->escUrl($src);
     }
 }

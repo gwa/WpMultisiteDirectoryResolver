@@ -13,8 +13,9 @@ namespace Gwa\Wordpress\Test;
  * @license     MIT
  */
 
-use Gwa\Wordpress\MultisiteResolverManager as MRM;
+use Gwa\Wordpress\MockeryWpBridge\MockeryWpBridge;
 use Gwa\Wordpress\MultisiteDirectoryResolver as MDR;
+use Gwa\Wordpress\MultisiteResolverManager as MRM;
 
 /**
  * MultisiteSubDomainResolverTest.
@@ -35,10 +36,12 @@ class MultisiteSubDomainResolverTest extends \PHPUnit_Framework_TestCase
     {
         $installsubfolder = 'foo/wp';
 
-        $cwml = new MRM($installsubfolder, MRM::TYPE_SUBDOMAIN);
+        $cwml = new MRM($installsubfolder, MRM::TYPE_SUBDOMAIN, new MockeryWpBridge());
         $cwml->getHandler()->init();
 
-        $filters = \Gwa\Wordpress\getAddedFilters();
+        $filters = $cwml->getWpBridge()->getAddedFilters();
+
+        $this->assertEquals(5, count($filters));
 
         $this->assertEquals('network_admin_url', $filters[0]->filtername);
         $this->assertInternalType('array', $filters[0]->callback);
@@ -48,70 +51,12 @@ class MultisiteSubDomainResolverTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('style_loader_src', $filters[2]->filtername);
         $this->assertInternalType('array', $filters[2]->callback);
-    }
 
-    public function testFixNetworkLogin()
-    {
-        $domain = 'http://example.org';
-        $installpath = '/path/to/my/project';
-        $installsubfolder = 'foo/wp';
+        $this->assertEquals('upload_dir', $filters[3]->filtername);
+        $this->assertInternalType('array', $filters[3]->callback);
 
-        $defaultloginurl = $domain.$installpath.'/foo/wp-login.php';
-        $expectedloginurl = $domain.$installpath.'/'.$installsubfolder.'/wp-login.php';
-
-        $cwml = new MRM($installsubfolder, MRM::TYPE_SUBDOMAIN);
-        $this->assertEquals($expectedloginurl, $cwml->getHandler()->fixNetworkAdminUrlFilter($defaultloginurl, '', ''));
-    }
-
-    public function testFixNetworkAdminUrl()
-    {
-        $domain = 'http://example.org';
-        $installpath = '/path/to/my/project';
-        $installsubfolder = 'foo/wp';
-
-        $defaultadminurl = $domain.$installpath.'/foo/wp-admin/network';
-        $expectedadminurl = $domain.$installpath.'/'.$installsubfolder.'/wp-admin/network';
-
-        $cwml = new MRM($installsubfolder, MRM::TYPE_SUBDOMAIN);
-        $this->assertEquals($expectedadminurl, $cwml->getHandler()->fixNetworkAdminUrlFilter($defaultadminurl, '', ''));
-    }
-
-    public function testLeavesNetworkAdminUrlWhenCorrect()
-    {
-        $domain = 'http://example.org';
-        $installpath = '/path/to/my/project';
-        $installsubfolder = 'foo/wp';
-
-        $fixedadminurl = $domain.$installpath.'/'.$installsubfolder.'/wp-admin/network';
-
-        $cwml = new MRM($installsubfolder, MRM::TYPE_SUBDOMAIN);
-        $this->assertEquals($fixedadminurl, $cwml->getHandler()->fixNetworkAdminUrlFilter($fixedadminurl, '', ''));
-    }
-
-    public function testFixNetworkActive()
-    {
-        $domain = 'http://example.org';
-        $installpath = '/path/to/my/project';
-        $installsubfolder = 'foo/wp';
-
-        $defaultloginurl = $domain.$installpath.'/foo/wp-activate.php';
-        $expectedloginurl = $domain.$installpath.'/'.$installsubfolder.'/wp-activate.php';
-
-        $cwml = new MRM($installsubfolder, MRM::TYPE_SUBDOMAIN);
-        $this->assertEquals($expectedloginurl, $cwml->getHandler()->fixNetworkAdminUrlFilter($defaultloginurl, '', ''));
-    }
-
-    public function testFixNetworkSignup()
-    {
-        $domain = 'http://example.org';
-        $installpath = '/path/to/my/project';
-        $installsubfolder = 'foo/wp';
-
-        $defaultloginurl = $domain.$installpath.'/foo/wp-signup.php';
-        $expectedloginurl = $domain.$installpath.'/'.$installsubfolder.'/wp-signup.php';
-
-        $cwml = new MRM($installsubfolder, MRM::TYPE_SUBDOMAIN);
-        $this->assertEquals($expectedloginurl, $cwml->getHandler()->fixNetworkAdminUrlFilter($defaultloginurl, '', ''));
+        $this->assertEquals('upload_dir', $filters[4]->filtername);
+        $this->assertInternalType('array', $filters[4]->callback);
     }
 
     public function testFixesAppURLWhenSiteUrlPassed()
@@ -124,7 +69,13 @@ class MultisiteSubDomainResolverTest extends \PHPUnit_Framework_TestCase
         $siteurl = 'http://example.org/projects/testWordpress/';
         $urlexpected = $siteurl.$appFolder;
 
-        $cwml = new MRM($installsubfolder, MRM::TYPE_SUBDOMAIN);
+        $cwml = new MRM($installsubfolder, MRM::TYPE_SUBDOMAIN, new MockeryWpBridge());
+        $cwml->getWpBridge()->mock()
+            ->shouldReceive('siteUrl')
+            ->andReturn($domain)
+            ->shouldReceive('escUrl')
+            ->andReturnUsing(function ($str) {return $str;});
+
         $this->assertEquals($urlexpected, $cwml->getHandler()->fixStyleScriptPathFilter($siteurl.'/app', ''));
     }
 
@@ -137,7 +88,11 @@ class MultisiteSubDomainResolverTest extends \PHPUnit_Framework_TestCase
         $siteurl = $domain.$installpath.'/';
         $urlpassed = $urlexpected = $siteurl.'/'.$installsubfolder.'/';
 
-        $cwml = new MRM($installsubfolder, MRM::TYPE_SUBDOMAIN);
+        $cwml = new MRM($installsubfolder, MRM::TYPE_SUBDOMAIN, new MockeryWpBridge());
+        $cwml->getWpBridge()->mock()
+            ->shouldReceive('escUrl')
+            ->andReturnUsing(function ($str) {return $str;});
+
         $this->assertEquals($urlexpected, $cwml->getHandler()->fixStyleScriptPathFilter($urlpassed, ''));
     }
 
@@ -147,7 +102,7 @@ class MultisiteSubDomainResolverTest extends \PHPUnit_Framework_TestCase
         $installpath = '/path/to/my/project';
         $installsubfolder = 'foo/wp';
 
-        $cwml = new SubDomainStub($installsubfolder, MRM::TYPE_SUBDOMAIN);
+        $cwml = new SubDomainStub($installsubfolder, MRM::TYPE_SUBDOMAIN, new MockeryWpBridge());
         $this->assertEquals('wp', $cwml->getWordpressName());
         $this->assertNotEquals('web', $cwml->getWordpressName());
     }

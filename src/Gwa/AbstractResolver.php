@@ -1,4 +1,5 @@
 <?php
+
 namespace Gwa\Wordpress;
 
 /**
@@ -12,6 +13,8 @@ namespace Gwa\Wordpress;
  * @license     MIT
  */
 
+use Gwa\Wordpress\MockeryWpBridge\Traits\WpBridgeTrait;
+
 /**
  * AbstractResolver.
  *
@@ -19,6 +22,8 @@ namespace Gwa\Wordpress;
  */
 abstract class AbstractResolver
 {
+    use WpBridgeTrait;
+
     /**
      * Folder path to wordpress, with trailing slash.
      *
@@ -76,14 +81,64 @@ abstract class AbstractResolver
     }
 
     /**
+     * Fix double backslashes in app folder.
+     *
+     * @param string
+     */
+    public function fixWpDoubleSlashFilter($urls)
+    {
+        foreach ($urls as &$url) {
+            if ($url) {
+                $url = str_replace('//app', '/app', $url);
+            }
+        }
+
+        return $urls;
+    }
+
+    /**
+     * Fixes the protocol in urls. Replaces leading double slashes //
+     * with the full protocol; https or http depending on context.
+     *
+     * @param string
+     *
+     * @return array
+     */
+    public function fixWpProtocolFilter($urls)
+    {
+        $protocol = $this->getSiteProtocol();
+
+        foreach ($urls as $k => &$v) {
+            if ((strpos($k, 'url') !== false) && (substr($v, 0, 2) === '//')) {
+                $v = $protocol.ltrim($v, '//');
+            }
+        }
+
+        return $urls;
+    }
+
+    /**
+     * Get the correct protocol.
+     *
+     * @return string
+     */
+    protected function getSiteProtocol()
+    {
+        return $this->getWpBridge()->isSsl() ? 'https://' : 'http://';
+    }
+
+    /**
      * Init all filter.
      */
     public function init()
     {
-        add_filter('network_admin_url', [$this, 'fixNetworkAdminUrlFilter'], 10, 2);
+        $this->getWpBridge()->addFilter('network_admin_url', [$this, 'fixNetworkAdminUrlFilter'], 10, 2);
 
-        add_filter('script_loader_src', [$this, 'fixStyleScriptPathFilter'], 10, 2);
-        add_filter('style_loader_src', [$this, 'fixStyleScriptPathFilter'], 10, 2);
+        $this->getWpBridge()->addFilter('script_loader_src', [$this, 'fixStyleScriptPathFilter'], 10, 2);
+        $this->getWpBridge()->addFilter('style_loader_src', [$this, 'fixStyleScriptPathFilter'], 10, 2);
+
+        $this->getWpBridge()->addFilter('upload_dir', [$this, 'fixWpDoubleSlashFilter'], 10, 1);
+        $this->getWpBridge()->addFilter('upload_dir', [$this, 'fixWpProtocolFilter'], 10, 1);
     }
 
     /**
