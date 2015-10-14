@@ -14,6 +14,7 @@ namespace Gwa\Wordpress\Test;
  */
 
 use Gwa\Wordpress\MultisiteResolverManager as MRM;
+use Gwa\Wordpress\MockeryWpBridge\MockeryWpBridge;
 
 /**
  * MultisiteResolverManager.
@@ -37,5 +38,14 @@ class MultisiteResolverManager extends \PHPUnit_Framework_TestCase
 
         $mrm = new MRM('/wp/', MRM::TYPE_FOLDER);
         $this->assertInstanceOf('\Gwa\Wordpress\MultisiteDirectoryResolver', $mrm->getHandler());
+    }
+
+    public function testMockeryWpBridgeInstance()
+    {
+        $mrm = new MRM('/wp/', MRM::TYPE_SUBDOMAIN);
+        $this->assertInstanceOf('\Gwa\Wordpress\MockeryWpBridge\WpBridge', $mrm->getWpBridge());
+
+        $mrm = new MRM('/wp/', MRM::TYPE_FOLDER, new MockeryWpBridge());
+        $this->assertInstanceOf('\Gwa\Wordpress\MockeryWpBridge\MockeryWpBridge', $mrm->getWpBridge());
     }
 }

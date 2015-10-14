@@ -12,7 +12,8 @@ namespace Gwa\Wordpress;
  * @license     MIT
  */
 
-use Gwa\Wordpress\MockeryWpBridge\MockeryWpBridge;
+use Gwa\Wordpress\MockeryWpBridge\Traits\WpBridgeTrait;
+use Gwa\Wordpress\MockeryWpBridge\WpBridge;
 
 /**
  * MultisiteResolverManager.
@@ -21,6 +22,8 @@ use Gwa\Wordpress\MockeryWpBridge\MockeryWpBridge;
  */
 class MultisiteResolverManager
 {
+    use WpBridgeTrait;
+
     const TYPE_SUBDOMAIN = '\Gwa\Wordpress\MultisiteSubDomainResolver';
     const TYPE_FOLDER    = '\Gwa\Wordpress\MultisiteDirectoryResolver';
 
@@ -37,15 +40,15 @@ class MultisiteResolverManager
      * @param string $wpdir
      * @param string $multisiteDomainType
      */
-    public function __construct($wpdir, $multisiteDomainType) {
+    public function __construct($wpdir, $multisiteDomainType, $wpBridge = null) {
         if (!is_string($wpdir) || $wpdir === '' || $wpdir === '/') {
             throw new \Exception('Please set the relative path to your Wordpress install folder.');
         }
 
-        $bridge  = new WpBridge();
+        $this->setWpBridge(($wpBridge !== null) ? $wpBridge : new WpBridge());
 
         $handler = new $multisiteDomainType($wpdir);
-        $handler->setWpBridge($bridge);
+        $handler->setWpBridge($this->getWpBridge());
 
         $this->handler = $handler;
     }
