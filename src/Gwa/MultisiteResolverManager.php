@@ -39,6 +39,7 @@ class MultisiteResolverManager
      *
      * @param string $wpdir
      * @param string $multisiteDomainType
+     * @param null   $paramname description
      */
     public function __construct($wpdir, $multisiteDomainType, $wpBridge = null) {
         if (!is_string($wpdir) || $wpdir === '' || $wpdir === '/') {
