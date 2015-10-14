@@ -1,4 +1,5 @@
 <?php
+
 namespace Gwa\Wordpress;
 
 /**
@@ -25,10 +26,10 @@ class MultisiteResolverManager
     use WpBridgeTrait;
 
     const TYPE_SUBDOMAIN = '\Gwa\Wordpress\MultisiteSubDomainResolver';
-    const TYPE_FOLDER    = '\Gwa\Wordpress\MultisiteDirectoryResolver';
+    const TYPE_FOLDER = '\Gwa\Wordpress\MultisiteDirectoryResolver';
 
     /**
-     * Resolver Handler
+     * Resolver Handler.
      *
      * @var \Gwa\Wordpress\Contracts\MultisiteDirectoryResolver
      */
@@ -41,7 +42,8 @@ class MultisiteResolverManager
      * @param string $multisiteDomainType
      * @param null   $wpBridge
      */
-    public function __construct($wpdir, $multisiteDomainType, $wpBridge = null) {
+    public function __construct($wpdir, $multisiteDomainType, $wpBridge = null)
+    {
         if (!is_string($wpdir) || $wpdir === '' || $wpdir === '/') {
             throw new \Exception('Please set the relative path to your Wordpress install folder.');
         }
@@ -55,7 +57,7 @@ class MultisiteResolverManager
     }
 
     /**
-     * Get current Handler
+     * Get current Handler.
      *
      * @return \Gwa\Wordpress\Contracts\MultisiteDirectoryResolver
      */

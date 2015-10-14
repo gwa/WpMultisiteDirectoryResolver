@@ -1,4 +1,5 @@
 <?php
+
 namespace Gwa\Wordpress;
 
 /**
@@ -21,7 +22,7 @@ use Gwa\Wordpress\Contracts\MultisiteDirectoryResolver as ResolverContract;
  */
 class MultisiteSubDomainResolver extends AbstractResolver implements ResolverContract
 {
-     /**
+    /**
      * Set the right path for script and style loader.
      *
      * @param string $src

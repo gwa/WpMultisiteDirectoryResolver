@@ -1,4 +1,5 @@
 <?php
+
 namespace Gwa\Wordpress\Contracts;
 
 /**
@@ -17,7 +18,7 @@ namespace Gwa\Wordpress\Contracts;
  *
  * @author  Daniel Bannert
  */
-Interface MultisiteDirectoryResolver
+interface MultisiteDirectoryResolver
 {
     /**
      * Set the right links in Adminbar.

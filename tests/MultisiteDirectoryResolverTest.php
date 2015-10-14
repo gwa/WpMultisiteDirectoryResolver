@@ -13,9 +13,9 @@ namespace Gwa\Wordpress\Test;
  * @license     MIT
  */
 
+use Gwa\Wordpress\MockeryWpBridge\MockeryWpBridge;
 use Gwa\Wordpress\MultisiteResolverManager as MRM;
 use Gwa\Wordpress\MultisiteSubDomainResolver as MSDR;
-use Gwa\Wordpress\MockeryWpBridge\MockeryWpBridge;
 
 /**
  * MultisiteDirectoryResolverTest.
@@ -41,7 +41,7 @@ class MultisiteDirectoryResolverTest extends \PHPUnit_Framework_TestCase
 
         $filters = $cwml->getWpBridge()->getAddedFilters();
 
-        $this->assertEquals(5, count($filters));
+        $this->assertEquals(7, count($filters));
 
         $this->assertEquals('network_admin_url', $filters[0]->filtername);
         $this->assertInternalType('array', $filters[0]->callback);
@@ -52,11 +52,17 @@ class MultisiteDirectoryResolverTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('style_loader_src', $filters[2]->filtername);
         $this->assertInternalType('array', $filters[2]->callback);
 
-        $this->assertEquals('site_url', $filters[3]->filtername);
+        $this->assertEquals('upload_dir', $filters[3]->filtername);
         $this->assertInternalType('array', $filters[3]->callback);
 
-        $this->assertEquals('includes_url', $filters[4]->filtername);
+        $this->assertEquals('upload_dir', $filters[4]->filtername);
         $this->assertInternalType('array', $filters[4]->callback);
+
+        $this->assertEquals('site_url', $filters[5]->filtername);
+        $this->assertInternalType('array', $filters[5]->callback);
+
+        $this->assertEquals('includes_url', $filters[6]->filtername);
+        $this->assertInternalType('array', $filters[6]->callback);
     }
 
     public function testFixNetworkLogin()
@@ -195,7 +201,7 @@ class MultisiteDirectoryResolverTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('siteUrl')
             ->andReturn('http://www.example.com')
             ->shouldReceive('escUrl')
-            ->andReturnUsing(function($str){return $str;});
+            ->andReturnUsing(function ($str) {return $str;});
 
         $this->assertEquals($externalUrl, $cwml->getHandler()->fixStyleScriptPathFilter($externalUrl, ''));
     }
@@ -214,7 +220,7 @@ class MultisiteDirectoryResolverTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('siteUrl')
             ->andReturn($domain)
             ->shouldReceive('escUrl')
-            ->andReturnUsing(function($str){return $str;});
+            ->andReturnUsing(function ($str) {return $str;});
 
         $this->assertEquals($expectedUrl, $cwml->getHandler()->fixStyleScriptPathFilter($urlPlugin, ''));
 
@@ -226,7 +232,7 @@ class MultisiteDirectoryResolverTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('siteUrl')
             ->andReturn($domain)
             ->shouldReceive('escUrl')
-            ->andReturnUsing(function($str){return $str;});
+            ->andReturnUsing(function ($str) {return $str;});
 
         $this->assertEquals($expectedUrl, $cwml->getHandler()->fixStyleScriptPathFilter($urlPlugin, ''));
     }
@@ -237,15 +243,15 @@ class MultisiteDirectoryResolverTest extends \PHPUnit_Framework_TestCase
         $installpath = '/path/to/my/project';
         $installsubfolder = 'foo/wp';
 
-        $siteurl = 'http://example.org/projects/testWordpress/';
-        $urlexpected = $siteurl.$installsubfolder;
+        $siteurl = 'http://example.org/projects/testWordpress';
+        $urlexpected = $siteurl.'/'.$installsubfolder;
 
         $cwml = new MRM($installsubfolder, MRM::TYPE_FOLDER, new MockeryWpBridge());
         $cwml->getWpBridge()->mock()
             ->shouldReceive('siteUrl')
             ->andReturn($siteurl)
             ->shouldReceive('escUrl')
-            ->andReturnUsing(function($str){return $str;});
+            ->andReturnUsing(function ($str) {return $str;});
 
         $this->assertEquals($urlexpected, $cwml->getHandler()->fixStyleScriptPathFilter($siteurl, ''));
     }
@@ -264,7 +270,7 @@ class MultisiteDirectoryResolverTest extends \PHPUnit_Framework_TestCase
             ->shouldReceive('siteUrl')
             ->andReturn($domain)
             ->shouldReceive('escUrl')
-            ->andReturnUsing(function($str){return $str;});
+            ->andReturnUsing(function ($str) {return $str;});
 
         $this->assertEquals($urlexpected, $cwml->getHandler()->fixStyleScriptPathFilter($urlpassed, ''));
     }
