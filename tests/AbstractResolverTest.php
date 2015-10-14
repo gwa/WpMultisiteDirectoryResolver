@@ -99,16 +99,47 @@ class AbstractResolverTest extends \PHPUnit_Framework_TestCase
         $installsubfolder = 'foo/wp';
 
         $urls = [
-            ''
+            'url' => 'https://example.org/path/to/my/project/app/plugins/',
+            'url' => 'http://example.org/path/to/my/project/app/uploaded/'
         ];
 
-        $expectedUrl = [
-            ''
+        $expectedUrls = [
+            'url' => 'http://example.org/path/to/my/project/app/plugins/',
+            'url' => 'http://example.org/path/to/my/project/app/uploaded/'
         ];
 
         $cwml = new Resolver($installsubfolder);
         $cwml->setWpBridge(new MockeryWpBridge());
-        $this->assertEquals($expectedUrl, $cwml->fixWpProtocolFilter($urls));
+        $cwml->getWpBridge()->mock()
+            ->shouldReceive('isSsl')
+            ->andReturn('http://');
+
+        $this->assertEquals($expectedUrls, $cwml->fixWpProtocolFilter($urls));
+    }
+
+    public function testfixWpDoubleSlashFilter()
+    {
+        $domain = 'http://example.org';
+        $installpath = '/path/to/my/project';
+        $installsubfolder = 'foo/wp';
+
+        $urls = [
+            'https://example.org/path/to/my/project//app/plugins/',
+            'http://example.org/path/to/my/project//app/uploaded/'
+        ];
+
+        $expectedUrls = [
+            'https://example.org/path/to/my/project/app/plugins/',
+            'http://example.org/path/to/my/project/app/uploaded/'
+        ];
+
+        $cwml = new Resolver($installsubfolder);
+        $cwml->setWpBridge(new MockeryWpBridge());
+        $cwml->getWpBridge()->mock()
+            ->shouldReceive('isSsl')
+            ->andReturn('http://');
+
+        $this->assertEquals($expectedUrls, $cwml->fixWpDoubleSlashFilter($urls));
     }
 }
 
