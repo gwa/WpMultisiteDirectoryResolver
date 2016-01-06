@@ -1,9 +1,26 @@
 <?php
+
 namespace Gwa\Wordpress\Test;
 
-use Gwa\Wordpress\AbstractResolver;
-use Gwa\Wordpress\WpBridge\MockeryWpBridge;
+/**
+ * Composer Multisite fixer.
+ *
+ * @author      Daniel Bannert <bannert@greatwhiteark.com>
+ * @copyright   2015 Great White Ark
+ *
+ * @link        http://www.greatwhiteark.com
+ *
+ * @license     MIT
+ */
 
+use Gwa\Wordpress\MockeryWpBridge\MockeryWpBridge;
+use Gwa\Wordpress\AbstractResolver;
+
+/**
+ * AbstractResolverTest.
+ *
+ * @author  Daniel Bannert
+ */
 class AbstractResolverTest extends \PHPUnit_Framework_TestCase
 {
     public function testFixNetworkLogin()
@@ -83,12 +100,12 @@ class AbstractResolverTest extends \PHPUnit_Framework_TestCase
 
         $urls = [
             'url' => 'https://example.org/path/to/my/project/app/plugins/',
-            'url' => 'http://example.org/path/to/my/project/app/uploaded/',
+            'url' => 'http://example.org/path/to/my/project/app/uploaded/'
         ];
 
         $expectedUrls = [
             'url' => 'http://example.org/path/to/my/project/app/plugins/',
-            'url' => 'http://example.org/path/to/my/project/app/uploaded/',
+            'url' => 'http://example.org/path/to/my/project/app/uploaded/'
         ];
 
         $cwml = new Resolver($installsubfolder);
@@ -108,12 +125,12 @@ class AbstractResolverTest extends \PHPUnit_Framework_TestCase
 
         $urls = [
             'https://example.org/path/to/my/project//app/plugins/',
-            'http://example.org/path/to/my/project//app/uploaded/',
+            'http://example.org/path/to/my/project//app/uploaded/'
         ];
 
         $expectedUrls = [
             'https://example.org/path/to/my/project/app/plugins/',
-            'http://example.org/path/to/my/project/app/uploaded/',
+            'http://example.org/path/to/my/project/app/uploaded/'
         ];
 
         $cwml = new Resolver($installsubfolder);
@@ -127,8 +144,8 @@ class AbstractResolverTest extends \PHPUnit_Framework_TestCase
 }
 
 /**
- * Test Class.
- */
+* Test Class
+*/
 class Resolver extends AbstractResolver
 {
 }

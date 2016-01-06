@@ -1,10 +1,27 @@
 <?php
+
 namespace Gwa\Wordpress\Test;
 
+/**
+ * Composer Multisite fixer.
+ *
+ * @author      Daniel Bannert <bannert@greatwhiteark.com>
+ * @copyright   2015 Great White Ark
+ *
+ * @link        http://www.greatwhiteark.com
+ *
+ * @license     MIT
+ */
+
+use Gwa\Wordpress\MockeryWpBridge\MockeryWpBridge;
 use Gwa\Wordpress\MultisiteDirectoryResolver as MDR;
 use Gwa\Wordpress\MultisiteResolverManager as MRM;
-use Gwa\Wordpress\WpBridge\MockeryWpBridge;
 
+/**
+ * MultisiteSubDomainResolverTest.
+ *
+ * @author  Daniel Bannert
+ */
 class MultisiteSubDomainResolverTest extends \PHPUnit_Framework_TestCase
 {
     /**

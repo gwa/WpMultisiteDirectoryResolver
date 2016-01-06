@@ -1,6 +1,8 @@
+*.phar
 /vendor
 /report
 /build
+composer.phar
 composer.lock
 .DS_Store
 Thumbs.db
