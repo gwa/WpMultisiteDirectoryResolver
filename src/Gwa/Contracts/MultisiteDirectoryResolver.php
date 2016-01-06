@@ -1,23 +1,6 @@
 <?php
-
 namespace Gwa\Wordpress\Contracts;
 
-/**
- * Wordpress Multisite fixer.
- *
- * @author      Daniel Bannert <bannert@greatwhiteark.com>
- * @copyright   2015 Great White Ark
- *
- * @link        http://www.greatwhiteark.com
- *
- * @license     MIT
- */
-
-/**
- * MultisiteDirectoryResolver.
- *
- * @author  Daniel Bannert
- */
 interface MultisiteDirectoryResolver
 {
     /**

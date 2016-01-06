@@ -1,25 +1,8 @@
 <?php
-
 namespace Gwa\Wordpress;
 
-/**
- * Wordpress Multisite fixer.
- *
- * @author      Daniel Bannert <bannert@greatwhiteark.com>
- * @copyright   2015 Great White Ark
- *
- * @link        http://www.greatwhiteark.com
- *
- * @license     MIT
- */
+use Gwa\Wordpress\WpBridge\Traits\WpBridgeTrait;
 
-use Gwa\Wordpress\MockeryWpBridge\Traits\WpBridgeTrait;
-
-/**
- * AbstractResolver.
- *
- * @author  Daniel Bannert
- */
 abstract class AbstractResolver
 {
     use WpBridgeTrait;

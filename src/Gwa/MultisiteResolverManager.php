@@ -1,26 +1,10 @@
 <?php
-
 namespace Gwa\Wordpress;
 
-/**
- * Wordpress Multisite fixer.
- *
- * @author      Daniel Bannert <bannert@greatwhiteark.com>
- * @copyright   2015 Great White Ark
- *
- * @link        http://www.greatwhiteark.com
- *
- * @license     MIT
- */
+use Exception;
+use Gwa\Wordpress\WpBridge\Traits\WpBridgeTrait;
+use Gwa\Wordpress\WpBridge\WpBridge;
 
-use Gwa\Wordpress\MockeryWpBridge\Traits\WpBridgeTrait;
-use Gwa\Wordpress\MockeryWpBridge\WpBridge;
-
-/**
- * MultisiteResolverManager.
- *
- * @author  Daniel Bannert
- */
 class MultisiteResolverManager
 {
     use WpBridgeTrait;
@@ -45,7 +29,7 @@ class MultisiteResolverManager
     public function __construct($wpdir, $multisiteDomainType, $wpBridge = null)
     {
         if (!is_string($wpdir) || $wpdir === '' || $wpdir === '/') {
-            throw new \Exception('Please set the relative path to your Wordpress install folder.');
+            throw new Exception('Please set the relative path to your Wordpress install folder.');
         }
 
         $this->setWpBridge(($wpBridge !== null) ? $wpBridge : new WpBridge());
