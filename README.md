@@ -69,4 +69,4 @@ Great White Ark - <bannert@greatwhiteark.com> - <http://www.greatwhiteark.com><b
 
 ### License
 
-The Narrowspark framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+Open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
